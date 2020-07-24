@@ -1,2 +1,2 @@
 # FabricCanvas
-Making Design Canvas Using Fabric JS
+Making Design with Canvas Using Fabric JS
