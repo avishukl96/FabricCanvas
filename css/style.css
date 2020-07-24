@@ -1,0 +1,5 @@
+.wrapper{display:flex; justify:space-between !important;}
+.library{display:flex; flex-direction:column; width:300px; height:200px; background: #9999; height:550px; overflow-y:auto;}
+img{max-width:100%; min-height:200px;}
+body{margin:0;}
+.library img{ background:#eee; margin-bottom:10px;}
