@@ -98,6 +98,18 @@ $(document).on('change','#fill',function(){
 	
 });
 
+/****Change Font Size *******/
+$(document).on('change','#size',function(){
+	
+	var obj = canvas.getActiveObject();
+	  if(obj){
+		obj.set("fontSize", this.value);
+	  }
+  canvas.renderAll();
+  save();
+	
+});
+
 /****Change Text Font *******/
 $('#font').change(function(){
   var obj = canvas.getActiveObject();
@@ -117,7 +129,7 @@ function addText() {
   canvas.add(oText);
   oText.bringToFront();
   canvas.setActiveObject(oText);
-  $('#fill, #font').trigger('change');
+  $('#fill, #font , #size').trigger('change');
   
 }
 
