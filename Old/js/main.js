@@ -1,127 +1,25 @@
 // create a wrapper around native canvas element (with id="c")
 var canvas = new fabric.Canvas('c');
-	var state;
-	 // past states
-	var undo = [];
-	 // reverted states
-	var redo = [];
 
-
-
-/****Add Image from library Div*******/
-
-/******
-When I run function toDataURL on the canvas, I get a js error during Download
-
-Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
-******/
+		var state;
+         // past states
+        var undo = [];
+         // reverted states
+        var redo = [];
 
 document.querySelectorAll(".library img").forEach(el=>{
+	
 	el.addEventListener('click',()=>{
 		//console.log(el);
 		fabric.Image.fromURL(el.src, (img) => {
 			img.scale(0.4);
-			img.set({left:200,
-			top:200,
-			width: 250,
-			height: 200,
-			angle: 0});
+			img.set({left:200,top:200});
 		canvas.add(img);
-		save();
-		}); 
+}); 
 	}); 
+ 
 }); 
 
-/****Add Image *******/
-document.getElementById('file').addEventListener("change", function (e) {
-  var file = e.target.files[0];
-  var reader = new FileReader();
-  reader.onload = function (f) {
-    var data = f.target.result;
-    fabric.Image.fromURL(data, function (img) {
-      var oImg = img.set({
-		  left: 70,
-		  top: 100,
-		  width: 250,
-		  height: 200,
-		  angle: 0,
-
-		  }).scale(0.9);
-		  
-      canvas.add(oImg).renderAll();
-      canvas.setActiveObject(oImg);  
-    });
-  };
-  reader.readAsDataURL(file);
-  save();
-});
-
-/****Add Background Image *******/
-document.getElementById('bg_file').addEventListener("change", function (e) {
-  var file = e.target.files[0];
-  var reader = new FileReader();
-  reader.onload = function (f) {
-    var imageUrl = f.target.result;
-    canvas.setBackgroundImage(imageUrl, canvas.renderAll.bind(canvas), {
-		backgroundImageOpacity: 0.5,
-		backgroundImageStretch: true,
-			width:canvas.width,
-			height:canvas.height
-		});
-  };
-  reader.readAsDataURL(file);
-  save();
-});
-
-
-/****Download Images *******/
-$(document).on('click','#download',function(){
-	 
-	 
-		  image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-		  var link = document.createElement('a');
-		  link.download = "my-image.png";
-		  link.href = image;
-		  link.click();
-	
-});
-
-/****Change Text Color *******/
-$(document).on('change','#fill',function(){
-	
-	var obj = canvas.getActiveObject();
-	  if(obj){
-		obj.set("fill", this.value);
-	  }
-  canvas.renderAll();
-  save();
-	
-});
-
-/****Change Text Font *******/
-$('#font').change(function(){
-  var obj = canvas.getActiveObject();
-  if(obj){
-    obj.set("fontFamily", this.value);
-  }
-  canvas.renderAll();
-  
-});
-
-/****Add Text Font *******/
-function addText() {
-  var oText = new fabric.IText('Add new text...', { 
-    left: 100, 
-    top: 100 ,
-  });
-  canvas.add(oText);
-  oText.bringToFront();
-  canvas.setActiveObject(oText);
-  $('#fill, #font').trigger('change');
-  
-}
-
-/****Add Shape *******/
 document.querySelectorAll(".shape button").forEach(btn=>{
 	btn.addEventListener('click',()=>{
 		switch(btn.id){
@@ -130,14 +28,12 @@ document.querySelectorAll(".shape button").forEach(btn=>{
 					  radius: 30, fill: 'green', left: 100, top: 100
 					});
 					canvas.add(circle);
-					 
 			break;
 			case 'triangle':
 				var triangle = new fabric.Triangle({
 					  width: 40, height: 50, fill: 'green', left: 50, top: 50
 					});
 					canvas.add(triangle);
-					
 			break;
 			case 'ellipse':
 				var ellipse = new fabric.Ellipse({ 
@@ -147,7 +43,7 @@ document.querySelectorAll(".shape button").forEach(btn=>{
 						stroke: 'green', 
 						strokeWidth: 3 
 					}); 
-					 
+					
 				canvas.add(ellipse);
 			break;
 			case 'rectangle':
@@ -157,7 +53,7 @@ document.querySelectorAll(".shape button").forEach(btn=>{
 				});
 
 				canvas.add(rect);
-			 
+			
 			break;
 			case 'line':
 										//x1, y1 , x2, y2
@@ -166,7 +62,7 @@ document.querySelectorAll(".shape button").forEach(btn=>{
 					}); 
 			   
 			   canvas.add(line); 
-			 
+			
 			break;
 			
 			case 'polygon':
@@ -180,7 +76,7 @@ document.querySelectorAll(".shape button").forEach(btn=>{
 					}); 
   
 				canvas.add(polygon); 
-		 
+			
 			break;
 			
 			case 'polyline':
@@ -196,23 +92,36 @@ document.querySelectorAll(".shape button").forEach(btn=>{
 					{ fill: 'white', stroke: 'green'}); 
 				
 				canvas.add(polyline); 
-			 
+			
 			break;
+			case 'texts':
+			 var texts = new fabric.IText('Add New Text', { 
+				  fontFamily: 'arial', //arial black
+				  left: 100, 
+				  top: 100 ,
+				})
+			canvas.add(texts); 
+			
+			
+			 
+			
+			
+			
+			break;
+			
 			
 		}
 		
-		  save();
+		 
 	  
 	}); 
  
 }); 
 
-/**** Delete Selected element *******/
 window.addEventListener("keydown",e =>{
 	if(e.key === "Delete" || e.key === "Backspace"){
 		canvas.remove(canvas.getActiveObject());
 	}
-	save();
 })
 
 /******************      Undo & Redo started here *************************/
@@ -236,7 +145,7 @@ window.addEventListener("keydown",e =>{
           })
         });
 
-	 /*** Push the current state into the undo stack and then capture the current state ***/
+	 /*** Push the current state into the undo stack and then capture the current state*/
 	 
 	 
         function save() {
@@ -277,16 +186,4 @@ window.addEventListener("keydown",e =>{
             }
           });
         }
-		
-		
-		function download_image(){
-		  var canvas = document.getElementById("c");
-		  image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-		  var link = document.createElement('a');
-		  link.download = "my-image.png";
-		  link.href = image;
-		  link.click();
-		}
-
-
 
