@@ -1,0 +1,23 @@
+Started from 20july
+
+@@1.  Add Background image
+@@2.  Add Addtional image from outside
+@@3.  Add Image from library
+@@4.  Add Shape (circle, rectangle , triangle , Ellipse , line, Polygone , Polyline)
+@@5.  Add New Text(able to type)
+@@6.  Change Color of text 
+@@7.  Change font size of text
+@@8.  Change font family of text 
+@@9.  Change image Dimension 
+@@10. Clean
+@@11. Undo
+@@12. Redo
+@@13. Download Image (glitch with no.3)
+14. Crop
+15. Animation 
+16. Image Filter
+16. Image Save 
+17. Add Image Into library from computer
+18. Download Saved Image 
+19. resize the image
+20. 

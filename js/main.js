@@ -16,9 +16,32 @@ When I run function toDataURL on the canvas, I get a js error during Download
 Uncaught DOMException: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported.
 ******/
 
+/****Add Image from library *******/
+
+//third try to add image from librabry 
 document.querySelectorAll(".library img").forEach(el=>{
 	el.addEventListener('click',()=>{
-		//console.log(el);
+		fabric.Image.fromURL(el.src, (img) => {
+			selectable: 1
+			img.scale(0.4);
+			img.set({left:200,
+			top:200,
+			width: 250,
+			height: 200,
+			angle: 0});
+		canvas.add(img);
+		save();
+		}); 
+		
+		
+		
+		
+	}); 
+}); 
+
+//second try to add image from librabry 
+/*document.querySelectorAll(".library img").forEach(el=>{
+	el.addEventListener('click',()=>{
 		fabric.Image.fromURL(el.src, (img) => {
 			img.scale(0.4);
 			img.set({left:200,
@@ -30,9 +53,31 @@ document.querySelectorAll(".library img").forEach(el=>{
 		save();
 		}); 
 	}); 
+}); */
+
+/*
+first try to add image from librabry 
+document.querySelectorAll(".library img").forEach(el=>{
+	el.addEventListener('click',()=>{
+	var imgInstance = new fabric.Image(el, {
+		  left: 100,
+		  top: 100,
+		  angle: 0,
+		   opacity: 0.75, 
+		  width:300,
+		  height:300
+		});
+		canvas.add(imgInstance); 
+
+	
+	}); 
 }); 
+*/
+
 
 /****Add Image *******/
+/* first try to add image 
+
 document.getElementById('file').addEventListener("change", function (e) {
   var file = e.target.files[0];
   var reader = new FileReader();
@@ -54,7 +99,37 @@ document.getElementById('file').addEventListener("change", function (e) {
   };
   reader.readAsDataURL(file);
   save();
-});
+});*/
+
+
+
+////second try to add image  -> success
+var imageLoader = document.getElementById('file');
+imageLoader.addEventListener('change', handleImage, false);
+function handleImage(e) {
+    var objects = canvas.getObjects();
+   
+   /******
+   //remove all content from canvas first
+    for (var i in objects) {
+       objects[i].remove();
+    } 
+	*****/ 
+	
+    var reader = new FileReader();
+    reader.onload = function (event) {
+        var img = new Image();
+        img.onload = function () {
+            var imgInstance = new fabric.Image(img, {
+               selectable: 1
+            }).scale(0.5);
+            canvas.add(imgInstance);
+            canvas.deactivateAll().renderAll();
+        }
+        img.src = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);
+}
 
 /****Add Background Image *******/
 document.getElementById('bg_file').addEventListener("change", function (e) {
@@ -74,17 +149,6 @@ document.getElementById('bg_file').addEventListener("change", function (e) {
 });
 
 
-/****Download Images *******/
-$(document).on('click','#download',function(){
-	 
-	 
-		  image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-		  var link = document.createElement('a');
-		  link.download = "my-image.png";
-		  link.href = image;
-		  link.click();
-	
-});
 
 /****Change Text Color *******/
 $(document).on('change','#fill',function(){
@@ -291,14 +355,60 @@ window.addEventListener("keydown",e =>{
         }
 		
 		
-		function download_image(){
-		  var canvas = document.getElementById("c");
+		
+/**** Changes Canvas Size  *******/	
+	var changeSize = document.getElementById('canvasSize');
+	changeSize.addEventListener('click', changeCanvasSize, false);
+	function changeCanvasSize(){
+		canvas.setDimensions({width:$('#cwidth').val(), height:$('#cheight').val()});
+		save();
+	}
+	
+/**** Clean Canvas   *******/		
+	
+	var changeSize = document.getElementById('canvasClean');
+	changeSize.addEventListener('click', cleanCanvas, false);
+	function cleanCanvas(){
+		var objects = canvas.getObjects();
+		if(canvas.getObjects().length ){
+			for (var i in objects) {
+			   objects[i].remove();
+			} 
+			save();
+		}	
+	}
+	
+
+	
+/****Download Images *******/
+// First try to download
+/*$(document).on('click','#download',function(){
+	 
 		  image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
 		  var link = document.createElement('a');
 		  link.download = "my-image.png";
 		  link.href = image;
 		  link.click();
-		}
 
+	
+}); */
+
+// second try to download
+var imageSaver = document.getElementById('lnkDownload');
+imageSaver.addEventListener('click', saveImage, false);
+
+function saveImage(e) {
+	var objects = canvas.getObjects();    
+	if(canvas.getObjects().length){
+    
+	 var link = document.createElement('a');
+         link.download = 'canvas.png';
+		 link.href = canvas.toDataURL({
+						format: 'png',
+						quality: 0.8
+					});
+		 link.click();
+}	
+}
 
 
